@@ -15,7 +15,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
+  final List<Widget> _pages = const [
     BiodataScreen(),
     KontakScreen(),
     KalkulatorScreen(),
@@ -27,91 +27,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MyApp Mobile'),
+        title: const Text('UTS Mobile App'),
         backgroundColor: const Color(0xFF1E3A8A),
         foregroundColor: Colors.white,
+        elevation: 2,
       ),
       drawer: Drawer(
+        backgroundColor: const Color(0xFFF9FAFB),
         child: Column(
           children: [
-            Container(
-              height: 200,
+            UserAccountsDrawerHeader(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF1E3A8A), Color(0xFF3B82F6)],
                 ),
               ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        'MAR',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E3A8A),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'Martin Rizki Wendi Sinurat',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '152023152',
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                  ],
-                ),
+              currentAccountPicture: const CircleAvatar(
+                backgroundImage: AssetImage('assets/profile.jpg'),
               ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildDrawerItem(Icons.person, 'Biodata', 0),
-                  _buildDrawerItem(Icons.phone, 'Kontak', 1),
-                  _buildDrawerItem(Icons.calculate, 'Kalkulator', 2),
-                  _buildDrawerItem(Icons.cloud, 'Cuaca', 3),
-                  _buildDrawerItem(Icons.newspaper, 'Berita', 4),
-                ],
+              accountName: const Text(
+                'Martin Rizki Wendi Sinurat',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              accountEmail: const Text('152023152'),
             ),
+            _drawerItem(Icons.person, "Biodata", 0),
+            _drawerItem(Icons.contacts, "Kontak", 1),
+            _drawerItem(Icons.calculate, "Kalkulator", 2),
+            _drawerItem(Icons.cloud, "Cuaca", 3),
+            _drawerItem(Icons.article, "Berita", 4),
           ],
         ),
       ),
-      body: _screens[_currentIndex],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _pages[_currentIndex],
+      ),
     );
   }
 
-  Widget _buildDrawerItem(IconData icon, String title, int index) {
-    final isSelected = _currentIndex == index;
+  Widget _drawerItem(IconData icon, String title, int index) {
+    final selected = _currentIndex == index;
     return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? const Color(0xFF1E3A8A) : Colors.grey[600],
-      ),
+      leading: Icon(icon, color: selected ? const Color(0xFF1E3A8A) : Colors.grey[700]),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? const Color(0xFF1E3A8A) : Colors.grey[800],
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          color: selected ? const Color(0xFF1E3A8A) : Colors.black87,
+          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      tileColor: isSelected ? const Color(0xFFDCE7F8) : null,
+      selected: selected,
       onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
+        setState(() => _currentIndex = index);
         Navigator.pop(context);
       },
     );
